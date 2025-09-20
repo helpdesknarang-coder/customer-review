@@ -201,9 +201,10 @@ const canvas = document.createElement("canvas");
   const snapshot = canvas.toDataURL("image/png");*/
 // Read hidden salesman info from QR URL
 const urlParams = new URLSearchParams(window.location.search);
-const salesmanId = urlParams.get("sid") || "00001";
-const salesmanName = urlParams.get("name") || "Rohit kumar";
-const salesmanMobile = urlParams.get("mobile") || "6201352747";
+const salesmanId = decodeURIComponent(urlParams.get("sid") || "00001");
+const salesmanName = decodeURIComponent(urlParams.get("name") || "Rohit Kumar");
+const salesmanMobile = decodeURIComponent(urlParams.get("mobile") || "6201352747");
+
 
 
 
