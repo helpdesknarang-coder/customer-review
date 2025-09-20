@@ -1,139 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Logo Rating Page</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-direction: column;
-      background: linear-gradient(135deg, #F7F4F1, #F7F4F1);
-      font-family: Arial, sans-serif;
-      padding-top: 70px;
-    }
-    .logo {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      margin-bottom: 20px;
-    }
-    .stars {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .star {
-      font-size: 40px;
-      cursor: pointer;
-      color: #ccc;
-      transition: color 0.3s;
-    }
-    .star.selected {
-      color: gold;
-    }
-    textarea {
-      width: 300px;
-      height: 100px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: none;
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #ffb6c1;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #ff99aa;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logo Rating Page</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(135deg, #F7F4F1, #F7F4F1);
+    font-family: Arial, sans-serif;
+    padding-top: 70px;
+  }
+  .logo {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 20px;
+  }
+  .stars {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .star {
+    font-size: 40px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.3s;
+  }
+  .star.selected {
+    color: gold;
+  }
+  textarea {
+    width: 300px;
+    height: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  button {
+    padding: 10px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ffb6c1;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background-color: #ff99aa;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Logo -->
-  <img src="logo.png" alt="Logo" class="logo" id="logo">
+<!-- Logo -->
+<img src="logo.png" alt="Logo" class="logo" id="logo">
 
-  <!-- Rating Stars -->
-  <div class="stars" id="stars">
-    <span class="star" data-value="1">&#9733;</span>
-    <span class="star" data-value="2">&#9733;</span>
-    <span class="star" data-value="3">&#9733;</span>
-    <span class="star" data-value="4">&#9733;</span>
-    <span class="star" data-value="5">&#9733;</span>
-  </div>
+<!-- Rating Stars -->
+<div class="stars" id="stars">
+  <span class="star" data-value="1">&#9733;</span>
+  <span class="star" data-value="2">&#9733;</span>
+  <span class="star" data-value="3">&#9733;</span>
+  <span class="star" data-value="4">&#9733;</span>
+  <span class="star" data-value="5">&#9733;</span>
+</div>
 
-  <!-- Remark Box -->
-  <textarea placeholder="Your feedback" id="remark"></textarea>
+<!-- Remark Box -->
+<textarea placeholder="Your feedback" id="remark"></textarea>
 
-  <!-- Submit Button -->
-  <button id="submitBtn">Submit</button>
+<!-- Submit Button -->
+<button id="submitBtn">Submit</button>
 
-  <script>
-    const stars = document.querySelectorAll('.star');
-    let selectedRating = 0;
+<script>
+  // Get hidden salesman info from URL (QR scan)
+  const urlParams = new URLSearchParams(window.location.search);
+  const salesmanId = urlParams.get("sid") || "TEST001";
+  const salesmanName = urlParams.get("name") || "Test Name";
+  const salesmanNumber = urlParams.get("mobile") || "0000000000";
 
-    stars.forEach(star => {
-      star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.value);
-        stars.forEach(s => {
-          s.classList.toggle('selected', parseInt(s.dataset.value) <= selectedRating);
-        });
+  const stars = document.querySelectorAll('.star');
+  let selectedRating = 0;
+
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = parseInt(star.dataset.value);
+      stars.forEach(s => {
+        s.classList.toggle('selected', parseInt(s.dataset.value) <= selectedRating);
       });
     });
+  });
 
-    const submitBtn = document.getElementById('submitBtn');
-    submitBtn.addEventListener('click', () => {
-      const remark = document.getElementById('remark').value;
-      if (selectedRating === 0) {
-        alert("Please select a rating!");
-        return;
-      }
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.addEventListener('click', () => {
+    const remark = document.getElementById('remark').value;
+    if (selectedRating === 0) {
+      alert("Please select a rating!");
+      return;
+    }
 
-      // Hidden salesman data (auto-fill)
-      const data = {
-        salesmanId: "S001",
-        name: "John Doe",
-        number: "9999999999",
-        rating: selectedRating,
-        remark: remark
-      };
+    const data = {
+      salesmanId: salesmanId,
+      salesmanName: salesmanName,
+      salesmanMobile: salesmanNumber,
+      rating: selectedRating,
+      remark: remark
+    };
 
-      fetch("https://script.google.com/macros/s/AKfycbyGhqBtkoOa_OwcFGnHkIymKxOiMUmW0rjNg3XIspGAXAgG_fuI426jXxjfugUu5hekmQ/exec", {  
-        method: "POST",
-        mode:"no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(result => {
-        if(result.status === "success"){
-          alert("Thank you for your feedback!");
-          document.getElementById('remark').value = "";
-          stars.forEach(s => s.classList.remove('selected'));
-          selectedRating = 0;
-        } else {
-          alert("Error submitting feedback");
-          console.error(result);
-        }
-      })
-      .catch(err => {
-        alert("Error connecting to server");
-        console.error(err);
-      });
+    fetch("https://script.google.com/macros/s/AKfycbyGhqBtkoOa_OwcFGnHkIymKxOiMUmW0rjNg3XIspGAXAgG_fuI426jXxjfugUu5hekmQ/exec", {
+      method: "POST",
+      mode: "no-cors", // Required for Apps Script
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    })
+    .then(() => {
+      alert("Thank you for your feedback!");
+      document.getElementById('remark').value = "";
+      stars.forEach(s => s.classList.remove('selected'));
+      selectedRating = 0;
+    })
+    .catch(err => {
+      alert("Error submitting feedback");
+      console.error(err);
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
