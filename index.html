@@ -201,7 +201,7 @@ const canvas = document.createElement("canvas");
   const snapshot = canvas.toDataURL("image/png");*/
 // Read hidden salesman info from QR URL
 const urlParams = new URLSearchParams(window.location.search);
-const salesmanId = decodeURIComponent(urlParams.get("sid") || "00001");
+const salesmanId = decodeURIComponent(urlParams.get("sid") || "0001");
 const salesmanName = decodeURIComponent(urlParams.get("name") || "Rohit Kumar");
 const salesmanMobile = decodeURIComponent(urlParams.get("number") || "6201352747");
 
@@ -212,31 +212,26 @@ const salesmanMobile = decodeURIComponent(urlParams.get("number") || "6201352747
 
 
   const data = {
-    
-    customerName: document.getElementById("customerName").value,
-    customerNumber: document.getElementById("customerNumber").value,
-    remark: document.getElementById("remarks").value,
-    mood: moodText.textContent,
-    emoji: emojiEl.textContent,
-    stars: stars,
-    salesmanName:salesman.name,
-    salesmanNumber: salesman.number,
-    salesmanId: salesman.id,
+  customerName: document.getElementById("customerName").value,
+  customerNumber: document.getElementById("customerNumber").value,
+  remark: document.getElementById("remarks").value,
+  mood: moodText.textContent,
+  emoji: emojiEl.textContent,
+  stars: stars,
+  salesmanName: salesmanName,     // ✅ fixed
+  salesmanNumber: salesmanMobile, // ✅ fixed
+  salesmanId: salesmanId          // ✅ fixed
+};
 
-    
-    
-
-
-
-  };
 
   fetch("https://script.google.com/macros/s/AKfycbwyVVbs6ENg_LLAuKJxp_z7Tx_JGg_sFlpIGk3vvbQvsfpOVeYXXfONMjZyEDdhmyge/exec", {
   method: "POST",
-  mode: "no-cors",  // 🔹 Important for Apps Script
+   // 🔹 Important for Apps Script
   body: JSON.stringify(data),
   headers: {"Content-Type": "application/json"}
 })
-.then(() => {
+.then(response =>response.json()) 
+.then(result => {
   alert("Feedback submitted successfully!");
   document.getElementById("customerName").value = "";
   document.getElementById("customerNumber").value = "";
