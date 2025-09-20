@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Mood Review</title>
+<script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<style>
+body { font-family: Arial, sans-serif; background: #fef3f7; display: flex; flex-direction: column; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
+h1 { color: #2563eb; margin-bottom: 20px; z-index: 10; }
+
+.circle-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border: 5px solid #f7c948;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: border-color 0.7s ease;
+  padding-bottom: 10px;
+  z-index: 5;
+}
+
+video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); position: absolute; top:0; left:0; }
+
+.emoji {
+  position: relative;
+  font-size: 60px;
+  z-index: 2;
+  transition: transform 0.5s ease;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+@keyframes pulse { 0% { transform: scale(1);} 50% { transform: scale(1.3);} 100% { transform: scale(1);} }
+
+.mood-text { font-weight: bold; font-size: 22px; color: #374151; margin-bottom: 10px; opacity: 1; transition: opacity 0.5s; z-index:10; }
+
+.stars { font-size: 32px; margin: 10px 0 15px 0; z-index:10;}
+.stars span { color: #d1d5db; transition: color 0.5s, transform 0.3s; display: inline-block; }
+.stars span.active { color: #facc15; transform: scale(1.3); }
+
+.inputs { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; text-align: center; z-index:10;}
+input, textarea { padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+
+button { padding: 10px; border-radius: 8px; border: none; cursor: pointer; background: #2563eb; color: white; font-weight: bold; z-index:10; }
+
+.floating-emoji {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.7;
+  animation: floatUp 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(1); opacity: 0.8; }
+  100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+}
+
+.floating-text {
+  position: absolute;
+  font-weight: bold;
+  animation: floatBackground 15s linear infinite;
+  pointer-events: none;
+}
+@keyframes floatBackground {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0.2; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<h1>Rate Your Experience</h1>
+
+<div class="circle-container" id="circle">
+  <video id="video" autoplay muted playsinline></video>
+  <div id="emoji" class="emoji">🙂</div>
+</div>
+
+<div class="mood-text" id="moodText">Neutral</div>
+<div class="stars" id="stars"></div>
+
+<div class="inputs">
+  <input type="text" id="customerName" placeholder="Your Name (Optional)">
+  <input type="text" id="customerNumber" placeholder="Your Number (Optional)">
+  <textarea id="remarks" rows="3" placeholder="Remark (Optional)"></textarea>
+</div>
+
+<button onclick="submitFeedback()">Submit Feedback</button>
+
+<script>
+const video = document.getElementById("video");
+const emojiEl = document.getElementById("emoji");
+const starsEl = document.getElementById("stars");
+const circle = document.getElementById("circle");
+const moodText = document.getElementById("moodText");
+
+let stars = 3;
+let lastMood = "";
+
+const moodMap = {
+  angry: { label:"Angry", emoji:"😡", color:"#ef4444", stars:1 },
+  sad:{ label:"Sad", emoji:"😢", color:"#3b82f6", stars:2 },
+  neutral:{ label:"Neutral", emoji:"😐", color:"#f7c948", stars:3 },
+  happy:{ label:"Happy", emoji:"🙂", color:"#10b981", stars:4 },
+  surprised:{ label:"Surprised", emoji:"😲", color:"#60a5fa", stars:4 },
+  disgusted:{ label:"Disgusted", emoji:"🤢", color:"#f97316", stars:2 },
+  fearful:{ label:"Fearful", emoji:"😨", color:"#fb7185", stars:2 },
+  best:{ label:"Best", emoji:"🤩", color:"#eab308", stars:5 }
+};
+
+// Camera setup
+navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}})
+.then(stream=>{video.srcObject=stream;})
+.catch(err=>{alert("Camera not accessible"); console.error(err);});
+
+// Load models
+Promise.all([
+  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+  faceapi.nets.faceExpressionNet.loadFromUri("/models")
+]).then(runDetection);
+
+// Emotion detection
+function runDetection(){
+  setInterval(async ()=>{
+    const result = await faceapi.detectSingleFace(video,new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+    if(result){
+      const expr=result.expressions;
+      let top=Object.keys(expr).reduce((a,b)=> expr[a]>expr[b]?a:b);
+      if(expr.happy>0.9) top="best";
+      if(!moodMap[top]) top="neutral";
+      const mood=moodMap[top];
+
+      if(lastMood!==top){
+        emojiEl.style.transform="scale(1.5)";
+        setTimeout(()=>{emojiEl.style.transform="scale(1)";},400);
+        fadeMoodText(mood.label);
+        animateStars(mood.stars);
+        lastMood = top;
+      }
+
+      emojiEl.textContent = mood.emoji;
+      circle.style.borderColor = mood.color;
+      stars = mood.stars;
+
+      spawnFloatingEmoji(mood.emoji);
+      spawnFloatingEmoji("❤️");
+      spawnFloatingText("I ❤️ Narang Family");
+    }
+  },700);
+}
+
+function fadeMoodText(text){
+  moodText.style.opacity = 0;
+  setTimeout(()=>{moodText.textContent = text; moodText.style.opacity = 1;},250);
+}
+
+function animateStars(count){
+  starsEl.innerHTML="";
+  for(let i=1;i<=5;i++){
+    const span=document.createElement("span");
+    span.textContent="★";
+    if(i<=count) span.classList.add("active");
+    starsEl.appendChild(span);
+  }
+}
+
+function spawnFloatingEmoji(symbol){
+  const em=document.createElement("div");
+  em.className="floating-emoji";
+  em.style.left=Math.random()*100+"vw";
+  em.style.animationDuration=(4+Math.random()*4)+"s";
+  em.style.color = `hsl(${Math.random()*360}, 80%, 50%)`;
+  em.textContent=symbol;
+  document.body.appendChild(em);
+  setTimeout(()=>em.remove(),7000);
+}
+
+function spawnFloatingText(text){
+  const em=document.createElement("div");
+  em.className="floating-text";
+  em.style.left=Math.random()*100+"vw";
+  em.style.fontSize=(20+Math.random()*20)+"px";
+  em.style.color = `hsl(${Math.random()*360}, 80%, 60%)`;
+  em.textContent = text;
+  document.body.appendChild(em);
+  setTimeout(()=>em.remove(),15000);
+}
+
+// Google Sheets Submit
+function submitFeedback(){
+/*
+const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  const snapshot = canvas.toDataURL("image/png");*/
+// Read hidden salesman info from QR URL
+const urlParams = new URLSearchParams(window.location.search);
+const salesmanId = urlParams.get("sid") || "00001";
+const salesmanName = urlParams.get("name") || "Rohit kumar";
+const salesmanMobile = urlParams.get("mobile") || "6201352747";
+
+
+
+
+
+
+  const data = {
+    customerName: document.getElementById("customerName").value,
+    customerNumber: document.getElementById("customerNumber").value,
+    remark: document.getElementById("remarks").value,
+    mood: moodText.textContent,
+    emoji: emojiEl.textContent,
+    stars: stars,
+    salesmanId: salesmanId,
+    salesmanName: salesmanName,
+    salesmanMobile: salesmanMobile
+    
+
+
+
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbwyVVbs6ENg_LLAuKJxp_z7Tx_JGg_sFlpIGk3vvbQvsfpOVeYXXfONMjZyEDdhmyge/exec", {
+  method: "POST",
+  mode: "no-cors",  // 🔹 Important for Apps Script
+  body: JSON.stringify(data),
+  headers: {"Content-Type": "application/json"}
+})
+.then(() => {
+  alert("Feedback submitted successfully!");
+  document.getElementById("customerName").value = "";
+  document.getElementById("customerNumber").value = "";
+  document.getElementById("remarks").value = "";
+})
+.catch(err => {
+  console.error(err);
+  alert("Error submitting feedback");
+});
+}
+</script>
+</body>
+</html>
