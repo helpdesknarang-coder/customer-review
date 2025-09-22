@@ -17,13 +17,10 @@
 </head>
 <body>
 
-  <div id="blockedMessage" class="hidden">
-    <h2>🚫 Access Blocked</h2>
-    <p>Please use a valid access link with a query string.</p>
-  </div>
+  
 
 
-   <div id="mainContent" class="hidden"></div>
+  
 <img src="logo.png" alt="Logo" class="logo">
 
 <div class="stars" id="stars">
@@ -105,20 +102,11 @@ const firebaseConfig = {
     }
   });
 
+ 
 
 
+ 
 
-  const hasQuery = window.location.search.length > 1;
-
-    if (hasQuery) {
-      // ✅ Query string found – show main content
-      document.getElementById("mainContent").classList.remove("hidden");
-    } else {
-      // 🚫 No query string – block access
-      document.getElementById("blockedMessage").classList.remove("hidden");
-    }
-
-    
 </script>
 
 </body>
