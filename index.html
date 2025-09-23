@@ -16,11 +16,6 @@
 </style>
 </head>
 <body>
-
-  
-
-
-  
 <img src="logo.png" alt="Logo" class="logo">
 
 <div class="stars" id="stars">
@@ -35,9 +30,37 @@
 <button id="submitBtn">Submit</button>
 
 <script type="module">
+
+
+async function getUserIP() {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    return data.ip;
+  } catch (error) {
+    console.error('Error fetching IP address:', error);
+    return null;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // ⭐ Firebase SDK imports
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+ /* import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";*/
+import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   // 🔹 Apna Firebase Config Yahan Paste Karo
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -82,6 +105,57 @@ const firebaseConfig = {
       return;
     }
 
+
+
+
+ const ip = await getUserIP();
+  if (!ip) {
+    alert("Unable to capture IP address. Please check your internet connection.");
+    return;
+  }
+
+  // Check if this IP already submitted review for this salesman today
+  const reviewsRef = collection(db, "reviews");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);  // start of today
+
+  // Firestore query to find existing reviews for this salesman + IP where createdAt is today
+  const q = query(
+    reviewsRef,
+    where("salesmanId", "==", salesmanId),
+    where("ip", "==", ip),
+    where("createdAt", ">=", today)
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    alert("You have already submitted a review today for this salesman.");
+    return;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     try {
       // 🔹 Save to Firestore (auto-generated Document ID)
       await addDoc(collection(db, "reviews"), {
@@ -90,6 +164,7 @@ const firebaseConfig = {
         salesmanMobile: String(salesmanMobile),
         rating: Number(selectedRating),
         remark: String(remark),
+        ip: ip,
         createdAt: new Date()  // timestamp
       });
       alert("✅ Thank you for your feedback!");
