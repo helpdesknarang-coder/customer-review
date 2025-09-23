@@ -109,6 +109,9 @@ const firebaseConfig = {
     const remark = document.getElementById('remark').value;
 const customerName = document.getElementById('customerNameInput').value.trim();
   const customerMobile = document.getElementById('customerMobileInput').value.trim();
+
+  console.log("Customer Name:", customerName);
+console.log("Customer Mobile:", customerMobile);
     if(selectedRating === 0){
       alert("Please select a rating!");
       return;
