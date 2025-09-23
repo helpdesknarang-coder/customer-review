@@ -90,8 +90,9 @@ const firebaseConfig = {
   const salesmanId = urlParams.get("sid") || "TEST001";
   const salesmanName = urlParams.get("name") || "Test Name";
   const salesmanMobile = urlParams.get("mobile") || "0000000000";
-  const customerName = urlParams.get("name") ||"TEST Name";
-  const customerMobile = urlParams.get("mobile") || "0000000000";
+  <input id="customerNameInput" type="text" placeholder="Enter your Name" style="..." />,
+<input id="customerMobileInput" type="text" placeholder="Enter your Number" style="..." />
+
 
   const stars = document.querySelectorAll('.star');
   let selectedRating = 0;
@@ -107,7 +108,8 @@ const firebaseConfig = {
 
   document.getElementById('submitBtn').addEventListener('click', async () => {
     const remark = document.getElementById('remark').value;
-
+const customerName = document.getElementById('customerNameInput').value.trim();
+  const customerMobile = document.getElementById('customerMobileInput').value.trim();
     if(selectedRating === 0){
       alert("Please select a rating!");
       return;
