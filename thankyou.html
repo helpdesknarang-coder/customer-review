@@ -82,17 +82,18 @@
     <p>I <span class="heart">❤️</span> Narang Garments</p>
 
     <!-- OK Button -->
-    <button onclick="closeWindow()">OK</button>
+   <button onclick="window.open('', '_self'); window.close();">OK</button>
+
   </div>
 
   <script>
   // Auto-close after 3 seconds
   
 
-  function closeWindow() {
-    window.open('', '_self');
-    window.close(); // ✅ Will now work properly
-  }
+  //function closeWindow() {
+   // window.open('', '_self');
+  //  window.close(); // ✅ Will now work properly
+  //}
 </script>
 
 
