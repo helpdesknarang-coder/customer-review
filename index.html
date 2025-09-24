@@ -122,7 +122,7 @@ console.log("Customer Mobile:", customerMobile);
 
  const ip = await getUserIP();
   if (!ip) {
-    alert("Unable to capture IP address. Please check your internet connection.");
+    alert("Unable to load page Please check your internet connection.");
     return;
   }
 
@@ -181,7 +181,13 @@ console.log("Customer Mobile:", customerMobile);
         ip: ip,
         createdAt: new Date()  // timestamp
       });
-      alert("✅ Thank you for your feedback!");
+      
+
+window.open("thankyou.html", "_self");
+
+
+
+
       document.getElementById('remark').value = "";
       stars.forEach(s => s.classList.remove('selected'));
       selectedRating = 0;
