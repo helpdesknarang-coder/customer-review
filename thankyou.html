@@ -2,101 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f6f3;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #FFB6C1, #FFB6C1);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      color: white;
-      overflow: hidden;
     }
-
     .container {
-      text-align: center;
-      animation: fadeIn 1.5s ease-in-out;
+      margin-top: 100px;
     }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 0.5em;
-      animation: bounce 2s infinite;
+    .logo img {
+      width: 150px;
     }
-
-    p {
-      font-size: 1.5em;
-      margin-top: 1em;
-      opacity: 0;
-      animation: fadeInText 2s ease-in-out forwards;
-      animation-delay: 1s;
+    .message {
+      font-size: 20px;
+      margin: 30px 0;
+      font-weight: bold;
+      color: #333;
     }
-
-    button {
-      margin-top: 40px;
-      padding: 10px 25px;
-      font-size: 16px;
+    .btn {
+      background-color: #ffb6b6;
       border: none;
+      padding: 10px 25px;
       border-radius: 8px;
-      background-color: #ffffff;
-      color: #388e3c;
       cursor: pointer;
-      transition: background-color 0.3s;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
     }
-
-    button:hover {
-      background-color: #50c7c7;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeInText {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .heart {
-      color: red;
-      font-size: 1.2em;
-      vertical-align: middle;
+    .btn:hover {
+      background-color: #ff9c9c;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>Thank you for review. We all <span class="heart">❤️</span> you</h1>
-    <p>I <span class="heart">❤️</span> Narang Garments</p>
-
-    <!-- OK Button -->
-   <button onclick="closeTab()">OK</button>
-
-
+    <!-- Replace src with your logo path -->
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <div class="message">
+      Thank you for your valuable feedback!
+    </div>
+    <button class="btn" onclick="window.close()">OK</button>
   </div>
-
-  <script>
- 
-  setTimeout(() => {
-    window.open('', '_self');
-    window.close();
-  }, 3000);
-</script>
-
-
-
-
 </body>
 </html>
