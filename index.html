@@ -4,11 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Logo Rating Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 <style>
-  body { margin: 0; height: 100vh; display: flex; justify-content: flex-start; align-items: center; flex-direction: column; background: linear-gradient(135deg, #F7F4F1, #F7F4F1); font-family: Arial, sans-serif; padding-top: 70px; }
+  body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  background: url('image.png') no-repeat center center;
+  background-size: cover;
+  color: #333;
+  font-family: Arial, sans-serif;
+  padding-top: 70px;
+}
+
+  /*body { margin: 0; height: 100vh; display: flex; justify-content: flex-start; align-items: center; flex-direction: column; background: linear-gradient(135deg, #F5F5DC, #F5F5DC);color: #333; font-family: Arial, sans-serif; padding-top: 70px; }*/
   .logo { width: 150px; height: 150px; object-fit: contain; margin-bottom: 20px; }
   .stars { display: flex; gap: 10px; margin-bottom: 20px; }
-  .star { font-size: 40px; cursor: pointer; color: #ccc; transition: color 0.3s; }
+  .star { font-size: 50px; cursor: pointer; color: #fefafa; transition: color 0.3s; }
   .star.selected { color: gold; }
   textarea { width: 300px; height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; resize: none; font-size: 16px; margin-bottom: 20px; }
   button { padding: 10px 25px; font-size: 16px; border: none; border-radius: 8px; background-color: #ffb6c1; cursor: pointer; transition: background 0.3s; }
@@ -16,9 +32,12 @@
 </style>
 </head>
 <body>
-<img src="logo.png" alt="Logo" class="logo">
 
+  
+<img src="logo (3).png" alt="Logo" class="logo" style="width: 120px;height: 80px;">
+<p style="margin-top: -10px;text-align: center; font-size: 20px; font-family: 'Times New Roman', Times, serif, sans-serif;color: #552532; font-weight: bold; width: 30;height: 50;">NARANG <br>GARMENTS</p>
 <div class="stars" id="stars">
+
   <span class="star" data-value="1">&#9733;</span>
   <span class="star" data-value="2">&#9733;</span>
   <span class="star" data-value="3">&#9733;</span>
@@ -27,11 +46,11 @@
 </div>
 
 
-<input id="customerNameInput" type="text" placeholder="Enter your Name" style="width: 300px; height: 20px; padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 3px;">
-<input id="customerMobileInput" type="text" placeholder="Enter your Number" style="width: 300px; height: 20px; padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 2px;">
+<input id="customerNameInput" type="text" placeholder="Enter your Name" style="width: 300px; height: 20px; padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 3px;font-family: Georgia, 'Times New Roman', Times, serif;">
+<input id="customerMobileInput" type="text" placeholder="Enter your Number" style="width: 300px; height: 20px; padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 2px;font-family: Georgia, 'Times New Roman', Times, serif;">
 
 
-<textarea placeholder="Your feedback" id="remark"></textarea>
+<textarea placeholder="Your feedback" id="remark" style="font-family: Georgia, 'Times New Roman', Times, serif,sans-serif; font-size: 16px; padding: 10px;"></textarea>
 <button id="submitBtn">Submit</button>
 
 <script type="module">
@@ -107,8 +126,8 @@ const firebaseConfig = {
 
   document.getElementById('submitBtn').addEventListener('click', async () => {
     const remark = document.getElementById('remark').value;
-const customerName = document.getElementById('customerNameInput').value.trim();
-  const customerMobile = document.getElementById('customerMobileInput').value.trim();
+    const customerName = document.getElementById('customerNameInput').value.trim();
+    const customerMobile = document.getElementById('customerMobileInput').value.trim();
 
   console.log("Customer Name:", customerName);
 console.log("Customer Mobile:", customerMobile);
@@ -132,7 +151,7 @@ console.log("Customer Mobile:", customerMobile);
   today.setHours(0, 0, 0, 0);  // start of today
 
   // Firestore query to find existing reviews for this salesman + IP where createdAt is today
-  const q = query(
+  /*const q = query(
     reviewsRef,
     where("salesmanId", "==", salesmanId),
     where("ip", "==", ip),
@@ -143,7 +162,7 @@ console.log("Customer Mobile:", customerMobile);
   if (!querySnapshot.empty) {
     alert("You have already submitted a review today for this salesman.");
     return;
-  }
+  }*/
 
 
 
@@ -184,6 +203,7 @@ console.log("Customer Mobile:", customerMobile);
       
 
        window.location.href = "thankyou.html";
+
 
 
 
