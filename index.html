@@ -151,7 +151,7 @@ console.log("Customer Mobile:", customerMobile);
   today.setHours(0, 0, 0, 0);  // start of today
 
   // Firestore query to find existing reviews for this salesman + IP where createdAt is today
-  /*const q = query(
+  const q = query(
     reviewsRef,
     where("salesmanId", "==", salesmanId),
     where("ip", "==", ip),
@@ -162,7 +162,7 @@ console.log("Customer Mobile:", customerMobile);
   if (!querySnapshot.empty) {
     alert("You have already submitted a review today for this salesman.");
     return;
-  }*/
+  }
 
 
 
